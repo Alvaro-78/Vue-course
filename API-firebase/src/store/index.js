@@ -37,37 +37,71 @@ export default createStore({
 		},
 	},
 	actions: {
-		cargar({ commit }) {},
-		async setTareas({ commit }, tarea) {
-			const url =
-				'https://console.firebase.google.com/project/vue-crud-4d638/database/vue-crud-4d638-default-rtdb/data/~2F';
+		async cargarLocalStorage({ commit }) {
 			try {
 				const res = await fetch(
-					'https://console.firebase.google.com/project/vue-crud-4d638/database/vue-crud-4d638-default-rtdb/data/~2F/tareas.json',
+					'https://vue-crud-4d638-default-rtdb.europe-west1.firebasedatabase.app/tareas.json'
+				);
+				const dataDB = await res.json();
+				const arrayTareas = [];
+				for (let id in dataDB) {
+					arrayTareas.push(dataDB[id]);
+				}
+				commit('cargar', arrayTareas);
+			} catch (error) {
+				console.log(error);
+			}
+		},
+		async setTareas({ commit }, tarea) {
+			try {
+				const res = await fetch(
+					`https://vue-crud-4d638-default-rtdb.europe-west1.firebasedatabase.app/tareas/${tarea.id}.json`,
 					{
 						method: 'PUT',
 						headers: {
 							'Content-Type': 'application/json',
-							'Access-Control-Allow-Origin': '*',
 						},
 						body: JSON.stringify(tarea),
 					}
 				);
-				const dataDB = await res.json;
+
+				const dataDB = await res.json();
 				console.log(dataDB);
 			} catch (error) {
 				console.log(error);
 			}
 			commit('set', tarea);
 		},
-		deleteTareas({ commit }, id) {
-			commit('eliminar', id);
+		async deleteTareas({ commit }, id) {
+			try {
+				await fetch(
+					`https://vue-crud-4d638-default-rtdb.europe-west1.firebasedatabase.app/tareas/${id}.json`,
+					{
+						method: 'DELETE',
+					}
+				);
+				commit('eliminar', id);
+			} catch (error) {
+				console.log(error);
+			}
 		},
 		setTarea({ commit }, id) {
 			commit('tarea', id);
 		},
-		updateTarea({ commit }, tarea) {
-			commit('update', tarea);
+		async updateTarea({ commit }, tarea) {
+			try {
+				const res = await fetch(
+					`https://vue-crud-4d638-default-rtdb.europe-west1.firebasedatabase.app/tareas/${tarea.id}.json`,
+					{
+						method: 'PATCH',
+						body: JSON.stringify(tarea),
+					}
+				);
+				const dataDB = await res.json();
+				commit('update', dataDB);
+			} catch (error) {
+				console.log(error);
+			}
 		},
 	},
 	modules: {},
