@@ -59,6 +59,7 @@
 		},
 		computed: {
 			block() {
+				console.log('botón clickado');
 				return this.task.name.trim() === '' ? true : false;
 			},
 		},

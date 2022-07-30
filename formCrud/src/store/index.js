@@ -25,13 +25,11 @@ export default createStore({
 			state.task = state.tasks.find((item) => item.id === payload);
 		},
 		update(state, payload) {
-			console.log(payload);
-			const payloadId = payload.id;
-			state.tasks = state.tasks.map((item) => item.id === payloadId)
+			console.log(state.tasks);
+			state.tasks = state.tasks.map((item) => item.id === payload.id)
 				? payload
 				: item;
 			router.push('/');
-			return;
 		},
 	},
 	actions: {
@@ -45,7 +43,6 @@ export default createStore({
 			commit('task', id);
 		},
 		updateTask({ commit }, task) {
-			console.log('click en update');
 			commit('update', task);
 		},
 	},
