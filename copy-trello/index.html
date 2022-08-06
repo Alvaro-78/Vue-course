@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>TrelloFake</title>
+	</head>
+	<body>
+		<div id="app">
+			<button @click="changeVisibility">Mostrar/Ocultar</button>
+			<tv-show-list></tv-show-list>
+			<div v-show="!show">No hay Datos</div>
+		</div>
+		<script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+		<script>
+			Vue.component('tv-show-list', {
+				data() {
+					return {
+						tvCollection: [
+							{
+								name: 'Game of Throne',
+								seasons: 7,
+							},
+							{
+								name: 'Breaking Bad',
+								seasons: 5,
+							},
+							{
+								name: 'LOST',
+								seasons: 3,
+							},
+						],
+					};
+				},
+				template: `
+        <ul>
+          <tv-collection
+            v-for="(collection, index) in tvCollection"
+            :key="index"
+            :name="collection.name"
+            :seasons="collection.seasons"
+				    ></tv-collection>
+          </ul>
+        `,
+			});
+
+			Vue.component('tv-collection', {
+				props: {
+					name: String,
+					seasons: Number,
+				},
+				template: `
+          <li> 
+          <strong>{{ name }}</strong> ({{ seasons }} Temporadas)
+          </li>
+        `,
+			});
+
+			const app = new Vue({
+				el: '#app',
+				data: {
+					show: true,
+				},
+				methods: {
+					changeVisibility() {
+						this.show = !this.show;
+					},
+				},
+			});
+		</script>
+	</body>
+</html>
